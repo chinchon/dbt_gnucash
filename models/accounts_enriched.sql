@@ -1,9 +1,13 @@
 SELECT
-    CONCAT_WS(':', parent7.name, parent6.name, parent5.name, parent4.name, parent3.name, parent2.name, parent.name, a.name) AS full_path,
-    a.name AS account_name,
-    a.account_type, 
-    a.description,
-    CONCAT_WS(':', c.namespace, mnemonic) AS commodity
+  a.guid,
+  Replace(
+    CONCAT_WS(':', parent7.name, parent6.name, parent5.name, parent4.name, parent3.name, parent2.name, parent.name, a.name),
+    'Root Account:', ''
+  ) AS fullname,
+  a.name,
+  a.account_type, 
+  a.description,
+  CONCAT_WS(':', c.namespace, mnemonic) AS commodity
 FROM {{ source("gnucash", "accounts") }} a
 LEFT JOIN {{ source("gnucash", "commodities") }} c ON c.guid = commodity_guid
 LEFT JOIN {{ source("gnucash", "accounts") }} AS parent ON a.parent_guid = parent.guid
