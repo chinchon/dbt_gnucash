@@ -1,6 +1,7 @@
 version: 2
 sources:
 - name: gnucash
+  schema: public
   tables:
   - name: accounts
   - name: billterms
