@@ -1,2 +1,1 @@
-select *
-from {{ source("gnucash", "accounts") }}
+select * from {{ source("gnucash", "accounts") }}
