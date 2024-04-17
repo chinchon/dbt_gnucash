@@ -1,0 +1,29 @@
+version: 2
+sources:
+- name: gnucash
+  schema: public
+  tables:
+  - name: accounts
+  - name: billterms
+  - name: books
+  - name: budget_amounts
+  - name: budgets
+  - name: commodities
+  - name: customers
+  - name: employees
+  - name: entries
+  - name: gnclock
+  - name: invoices
+  - name: jobs
+  - name: lots
+  - name: orders
+  - name: prices
+  - name: recurrences
+  - name: schedxactions
+  - name: slots
+  - name: splits
+  - name: taxtable_entries
+  - name: taxtables
+  - name: transactions
+  - name: vendors
+  - name: versions
