@@ -1,4 +1,4 @@
-select guid, name, last_reconcile_date
-from {{ ref("stg_accounts") }} a
-left join
-    {{ ref("int_splits_aggregated_to_accounts") }} agg on a.guid = agg.account_guid
+select guid, name, fqn, last_reconcile_date, is_placeholder
+from {{ ref("stg_accounts") }}
+left join {{ ref("int_splits_aggregated_to_accounts") }} using (guid)
+left join {{ ref("int_accounts_joined_parent_accounts") }} using (guid)

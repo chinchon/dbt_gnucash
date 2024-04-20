@@ -1,5 +1,5 @@
 select
-    account_guid,
+    account_guid as guid,
     max(
         case reconcile_state when 'y' then reconcile_date else null end
     ) as last_reconcile_date
