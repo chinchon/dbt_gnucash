@@ -1,11 +1,11 @@
 select
     account_guid as guid,
     max(
-        case reconcile_state when 'y' then reconcile_date else null end
+        case when is_reconciled = 1 then reconcile_date else null end
     ) as last_reconcile_date,
     count(*) as count_of_splits,
-    sum(cast(reconcile_state = 'y' as int)) as count_of_splits_reconciled,
-    sum(cast(reconcile_state != 'y' as int)) as count_of_splits_unreconciled,
+    sum(is_reconciled) as count_of_splits_reconciled,
+    sum(case when is_reconciled = 1 then 0 else 1 end) as count_of_splits_unreconciled,
     cast(sum(value) as double) as balance
 from {{ ref("stg_splits") }}
 group by 1
