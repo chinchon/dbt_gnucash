@@ -1,7 +1,7 @@
 version: 2
 sources:
 - name: gnucash
-  schema: public
+  schema: "{{ target.schema }}"
   tables:
   - name: accounts
   - name: billterms
