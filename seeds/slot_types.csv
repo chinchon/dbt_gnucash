@@ -1,0 +1,11 @@
+id,type
+1,int64
+2,double
+3,numeric
+4,string
+5,guid
+6,timespec
+7,binary
+8,list
+9,frame
+10,date
