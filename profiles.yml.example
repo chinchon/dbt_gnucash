@@ -1,0 +1,37 @@
+dbt_gnucash:
+  outputs:
+    dev-postgres:
+      type: postgres
+      threads: 1
+      host: localhost
+      port: 5432
+      user: gnucash
+      pass: ********
+      dbname: gnucash
+      schema: public
+    dev-sqlite: &dev-sqlite
+      type: sqlite
+      threads: 1
+      database: database
+      schema: main
+      schemas_and_paths:
+        main: /path/to/gnucash/dev.db.gnucash
+      schema_directory: /path/to/gnucash/
+    dev-duckdb:
+      type: duckdb
+      attach:
+        - path: /path/to/gnucash/dev.db.gnucash
+          alias: gnucash
+          type: sqlite
+    dev: *dev-sqlite
+
+    prod:
+      type: sqlite
+      threads: 1
+      database: database
+      schema: main
+      schemas_and_paths:
+        main: /path/to/gnucash/prod.db.gnucash
+      schema_directory: /path/to/gnucash/
+
+  target: dev
