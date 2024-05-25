@@ -1,5 +1,5 @@
 with
-    source as (select * from {{ source('gnucash', 'jobs') }}),
+    source as (select * from {{ source("gnucash", "jobs") }}),
 
     renamed as (
 
