@@ -1,5 +1,5 @@
 with
-    source as (select * from {{ source('gnucash', 'gnclock') }}),
+    source as (select * from {{ source("gnucash", "gnclock") }}),
 
     renamed as (select hostname, pid from source)
 
