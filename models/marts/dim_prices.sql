@@ -20,12 +20,13 @@ select
     value,
     date,
     case
-        currency_mnemonic
-        when 'MYR'
+        when commodity_mnemonic = 'MYR'
+        then 1
+        when currency_mnemonic = 'MYR'
         then value
-        when 'SGD'
+        when currency_mnemonic = 'SGD'
         then value * {{ sgd_myr }}
-        when 'USD'
+        when currency_mnemonic = 'USD'
         then value * {{ usd_myr }}
     end as value_myr
 from {{ ref("int_prices_joined_commodities") }}
