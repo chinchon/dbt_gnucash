@@ -15,7 +15,8 @@ select
     count_of_splits_unreconciled,
     balance,
     c.mnemonic as unit,
-    latest_transaction
+    latest_transaction,
+    parent_guid
 from {{ ref("stg_accounts") }} a
 left join {{ ref("int_splits_aggregated_to_accounts") }} using (guid)
 left join {{ ref("int_accounts_joined_parent_accounts") }} using (guid)
