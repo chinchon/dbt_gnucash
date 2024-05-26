@@ -1,12 +1,13 @@
 select
-    guid,
-    commodity_guid,
-    currency_guid,
-    date,
-    source,
-    type,
-    value_num,
-    value_denom,
+    p.guid,
+    p.commodity_guid,
+    p.currency_guid,
+    p.date,
+    p.source,
+    p.type,
+    p.value_num,
+    p.value_denom,
+    cast(value_num as float) / value_denom as value,
     c.guid as commodity_guid,
     c.namespace as commodity_namespace,
     c.mnemonic as commodity_mnemonic,
@@ -24,7 +25,8 @@ select
     cu.fraction as currency_fraction,
     cu.quote_flag as currency_quote_flag,
     cu.quote_source as currency_quote_source,
-    cu.quote_tz as currency_quote_tz
+    cu.quote_tz as currency_quote_tz,
+    row_number() over (partition by c.mnemonic order by date desc) = 1 as is_latest
 from {{ ref("stg_prices") }} p
 left join {{ ref("stg_commodities") }} c on c.guid = p.commodity_guid
 left join {{ ref("stg_commodities") }} cu on cu.guid = p.currency_guid
