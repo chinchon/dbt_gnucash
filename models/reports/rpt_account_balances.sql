@@ -1,3 +1,4 @@
+{% set max_parent = 10 %}
 with
     p1 as (
         select
@@ -8,16 +9,19 @@ with
         from dim_accounts
         group by parent_guid
     ),
-    p2 as (
-        select
-            parent_guid as guid,
-            sum(balance_myr) as subtotal_myr,
-            sum(balance_sgd) as subtotal_sgd,
-            sum(balance_usd) as subtotal_usd
-        from dim_accounts a
-        where guid in (select guid from p1)
-        group by parent_guid
-    )
+    {% for i in range(2, max_parent) %}
+        p{{ i }} as (
+            select
+                parent_guid as guid,
+                sum(subtotal_myr) as subtotal_myr,
+                sum(subtotal_sgd) as subtotal_sgd,
+                sum(subtotal_usd) as subtotal_usd
+            from dim_accounts a
+            join p{{ i - 1 }} using (guid)
+            group by parent_guid
+        )
+        {% if not loop.last %},{% endif %}
+    {% endfor %}
 select
     a.guid,
     a.name,
@@ -30,14 +34,16 @@ select
     round(a.balance_sgd, 2) as balance_sgd,
     round(a.balance_usd, 2) as balance_usd,
     ifnull(a.balance_myr, 0)
-    + ifnull(p1.subtotal_myr, 0)
-    + ifnull(p2.subtotal_myr, 0) as subtotal_myr,
+    {% for i in range(1, max_parent) %}
+        + ifnull(p{{ i }}.subtotal_myr, 0)
+    {% endfor %} as subtotal_myr,
     ifnull(a.balance_sgd, 0)
-    + ifnull(p1.subtotal_sgd, 0)
-    + ifnull(p2.subtotal_sgd, 0) as subtotal_sgd,
+    {% for i in range(1, max_parent) %}
+        + ifnull(p{{ i }}.subtotal_sgd, 0)
+    {% endfor %} as subtotal_sgd,
     ifnull(a.balance_usd, 0)
-    + ifnull(p1.subtotal_usd, 0)
-    + ifnull(p2.subtotal_usd, 0) as subtotal_usd
+    {% for i in range(1, max_parent) %}
+        + ifnull(p{{ i }}.subtotal_usd, 0)
+    {% endfor %} as subtotal_usd
 from dim_accounts a
-left join p1 using (guid)
-left join p2 using (guid)
+{% for i in range(1, max_parent) %} left join p{{ i }} using (guid) {% endfor %}
