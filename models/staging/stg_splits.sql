@@ -17,8 +17,8 @@ with
             quantity_denom,
             lot_guid,
             cast(reconcile_state = 'y' as int) as is_reconciled,
-            cast(cast(value_num as double) / value_denom as double) as value,
-            cast(cast(quantity_num as double) / quantity_denom as double) as quantity
+            cast(value_num as double) / value_denom as value,
+            cast(quantity_num as double) / quantity_denom as quantity
 
         from source
 
