@@ -1,7 +1,8 @@
 select
-    account_category,
-    sum(balance_myr) as balance_myr,
-    sum(balance_sgd) as balance_sgd,
-    sum(balance_usd) as balance_usd
+    name as account_category,
+    round(subtotal_myr, 2) as subtotal_myr,
+    round(subtotal_sgd, 2) as subtotal_sgd,
+    round(subtotal_usd, 2) as subtotal_usd
 from {{ ref("rpt_account_balances") }}
-group by 1
+join {{ ref("int_accounts_joined_parent_accounts") }} using (guid)
+where depth = 2
