@@ -1,0 +1,30 @@
+select
+    guid,
+    commodity_guid,
+    currency_guid,
+    date,
+    source,
+    type,
+    value_num,
+    value_denom,
+    c.guid as commodity_guid,
+    c.namespace as commodity_namespace,
+    c.mnemonic as commodity_mnemonic,
+    c.fullname as commodity_fullname,
+    c.cusip as commodity_cusip,
+    c.fraction as commodity_fraction,
+    c.quote_flag as commodity_quote_flag,
+    c.quote_source as commodity_quote_source,
+    c.quote_tz as commodity_quote_tz,
+    cu.guid as currency_guid,
+    cu.namespace as currency_namespace,
+    cu.mnemonic as currency_mnemonic,
+    cu.fullname as currency_fullname,
+    cu.cusip as currency_cusip,
+    cu.fraction as currency_fraction,
+    cu.quote_flag as currency_quote_flag,
+    cu.quote_source as currency_quote_source,
+    cu.quote_tz as currency_quote_tz
+from {{ ref("stg_prices") }} p
+left join {{ ref("stg_commodities") }} c on c.guid = p.commodity_guid
+left join {{ ref("stg_commodities") }} cu on cu.guid = p.currency_guid
