@@ -2,6 +2,11 @@ select
     a.guid,
     name,
     fqn,
+    substring(
+        replace(fqn, 'Root Account:', ''),
+        1,
+        instr(replace(fqn, 'Root Account:', ''), ':') - 1
+    ) as account_category,
     account_type,
     is_placeholder,
     last_reconcile_date,
