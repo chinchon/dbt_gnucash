@@ -1,15 +1,15 @@
 {% set sql_statement %}
     select value from {{ ref("int_prices_joined_commodities") }}
-    where is_latest and commodity_mnemonic = 'SGD' and currency_mnemonic = 'MYR'
+    where commodity_mnemonic = 'SGD' and currency_mnemonic = 'MYR'
+    order by date desc limit 1
 {% endset %}
-
 {%- set sgd_myr = dbt_utils.get_single_value(sql_statement) -%}
 
 {% set sql_statement %}
     select value from {{ ref("int_prices_joined_commodities") }}
-    where is_latest and commodity_mnemonic = 'USD' and currency_mnemonic = 'MYR'
+    where commodity_mnemonic = 'USD' and currency_mnemonic = 'MYR'
+    order by date desc limit 1
 {% endset %}
-
 {%- set usd_myr = dbt_utils.get_single_value(sql_statement) -%}
 
 with
