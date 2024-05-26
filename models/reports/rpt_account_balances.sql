@@ -6,7 +6,7 @@ with
             sum(balance_myr) as subtotal_myr,
             sum(balance_sgd) as subtotal_sgd,
             sum(balance_usd) as subtotal_usd
-        from dim_accounts
+        from {{ ref("dim_accounts") }}
         group by parent_guid
     ),
     {% for i in range(2, max_parent) %}
@@ -16,7 +16,7 @@ with
                 sum(subtotal_myr) as subtotal_myr,
                 sum(subtotal_sgd) as subtotal_sgd,
                 sum(subtotal_usd) as subtotal_usd
-            from dim_accounts a
+            from {{ ref("dim_accounts") }} a
             join p{{ i - 1 }} using (guid)
             group by parent_guid
         )
@@ -29,10 +29,10 @@ select
     a.account_category,
     a.latest_transaction,
     a.unit,
-    round(a.balance, 2) as balance,
-    round(a.balance_myr, 2) as balance_myr,
-    round(a.balance_sgd, 2) as balance_sgd,
-    round(a.balance_usd, 2) as balance_usd,
+    a.balance,
+    a.balance_myr,
+    a.balance_sgd,
+    a.balance_usd,
     ifnull(a.balance_myr, 0)
     {% for i in range(1, max_parent) %}
         + ifnull(p{{ i }}.subtotal_myr, 0)
@@ -45,5 +45,5 @@ select
     {% for i in range(1, max_parent) %}
         + ifnull(p{{ i }}.subtotal_usd, 0)
     {% endfor %} as subtotal_usd
-from dim_accounts a
+from {{ ref("dim_accounts") }} a
 {% for i in range(1, max_parent) %} left join p{{ i }} using (guid) {% endfor %}
